@@ -5,7 +5,8 @@
 
 #define GAME_HEIGHT 20
 #define GAME_WIDTH 20
-
+#define PLAYER_COLOR_PAIR 1 
+#define TRAIL_COLOR_PAIR 2
 void ui_init();
 
 void ui_cleanup(WINDOW *win);

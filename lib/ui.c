@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
+
 static int screen_height;
 static int screen_width;
 
@@ -13,6 +15,10 @@ void ui_init() {
     curs_set(FALSE);
     set_escdelay(25);
     getmaxyx(stdscr, screen_height, screen_width);
+
+    start_color();
+    init_pair(PLAYER_COLOR_PAIR, COLOR_WHITE, COLOR_BLACK); 
+    init_pair(TRAIL_COLOR_PAIR, COLOR_WHITE, COLOR_BLACK);
 }
 
 void ui_cleanup(WINDOW *win) {
@@ -37,7 +43,6 @@ WINDOW* create_game_window() {
     return game_win;
 }
 
-// 修正：删除了多余的参数，现在函数实现和声明完全匹配
 void handle_resize(WINDOW **win_ptr) {
     delwin(*win_ptr);
     clear();
