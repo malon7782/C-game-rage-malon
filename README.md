@@ -6,6 +6,9 @@ Even though both are just your imagination.
 To install:
 `sudo bash install.sh`
 
+To play:
+`mtrage`
+
 # Roadmap - One week challenge
 1. (done)build game window; deal with issue of resizing; add controllabe player
 2. (done)add bullets and enermy; build basic game logic 
