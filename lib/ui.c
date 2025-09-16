@@ -9,7 +9,7 @@ void ui_init(){
     cbreak();
     noecho();
     curs_set(FALSE);
-
+    set_escdelay(25);
 }
 
 void ui_cleanup(WINDOW *win){

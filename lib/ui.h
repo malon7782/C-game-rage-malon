@@ -4,7 +4,7 @@
 #include <ncurses.h>
 
 #define GAME_HEIGHT 20
-#define GAME_WIDTH 70
+#define GAME_WIDTH 30
 
 void ui_init();
 
