@@ -17,8 +17,7 @@ int main() {
     ui_init();
 
     int last_shot_time =0;
-    int yMax, xMax;
-    WINDOW *game_win = create_game_window(&yMax, &xMax);
+    WINDOW *game_win = create_game_window();
 
     Player p = {GAME_WIDTH / 2, GAME_HEIGHT - 2, 'M'};
     Enemy enemies[MAX_ENEMIES] = {0};
@@ -32,7 +31,7 @@ int main() {
     while ((ch = wgetch(game_win)) != 'q') {
         
         if (ch == KEY_RESIZE) {
-            handle_resize(&game_win, &yMax, &xMax);
+            handle_resize(&game_win);
             continue;
         }
         
