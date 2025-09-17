@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <pthread.h>
 #include <unistd.h>
 #include <time.h>
 #include "enemy.h"
@@ -7,12 +8,14 @@
 #include "ui.h"
 #include "player.h"
 #include "meteor.h"
+#include "background.h"
 
 #define MAX_BULLETS 50
 #define MAX_ENEMIES 100
 #define SHOOT_COOLDOWN 20
 #define PLAYER_SPEED_DIVIDER 3
 #define MAX_METEORS 20
+#define MAX_STARS 40
 
 int main() {
 
@@ -31,6 +34,8 @@ int main() {
     }
 
     
+    Star starfield[MAX_STARS] = {0};
+    init_starfield(starfield, MAX_STARS);
     Enemy enemies[MAX_ENEMIES] = {0};
     Bullet bullets[MAX_BULLETS] = {0};
     Meteor meteors[MAX_METEORS] = {0};
@@ -38,6 +43,7 @@ int main() {
     int score = 0;
     int game_timer = 0;
 
+    
     int initial_enemy_speed_divider = 10;
     int initial_spawn_interval = 50;
     
@@ -46,6 +52,7 @@ int main() {
 
     while (!game_over && (ch = wgetch(game_win)) != 'q') {
         
+
         if (ch == KEY_RESIZE) {
             handle_resize(&game_win);
             continue;
@@ -95,7 +102,9 @@ int main() {
 
         update_bullets(bullets, MAX_BULLETS);
         update_enemies(enemies, MAX_ENEMIES, GAME_HEIGHT, game_timer, enemy_speed_divider);
-        update_meteors(meteors, MAX_METEORS, game_timer, enemy_speed_divider);
+        update_meteors(meteors, MAX_METEORS, game_timer, enemy_speed_divider);\
+        update_starfield(starfield, MAX_STARS, game_timer, score);
+        
 
         handle_collisions(bullets, MAX_BULLETS, enemies, MAX_ENEMIES, &score);
         handle_bullet_meteor_collisions(bullets, MAX_BULLETS, meteors, MAX_METEORS);
@@ -103,6 +112,14 @@ int main() {
 
         werase(game_win);
         box(game_win, 0, 0);
+
+        for (int i = 0; i < MAX_STARS; i++){
+            wattron(game_win, starfield[i].attribute | COLOR_PAIR(TRAIL_COLOR_PAIR)); 
+            mvwprintw(game_win, starfield[i].y, starfield[i].x, "%c", starfield[i].character);
+            wattroff(game_win, starfield[i].attribute | COLOR_PAIR(TRAIL_COLOR_PAIR));
+
+        }
+
 
         wattron(game_win, A_DIM | COLOR_PAIR(TRAIL_COLOR_PAIR));
         for (int i = 0; i < TRAIL_LENGTH; i++) {
@@ -121,18 +138,22 @@ int main() {
                 mvwprintw(game_win, bullets[i].y, bullets[i].x, "%c", bullets[i].character);
             }
         }
-
+        
+        wattron(game_win, A_BOLD | COLOR_PAIR(ENEMY_COLOR_PAIR));
         for (int i = 0; i < MAX_ENEMIES; ++i) {
             if (enemies[i].active) {
                 mvwprintw(game_win, enemies[i].y, enemies[i].x, "%c", enemies[i].character);
             }
         }
-    
+        wattroff(game_win, A_BOLD | COLOR_PAIR(ENEMY_COLOR_PAIR));
+
+        wattron(game_win, A_DIM | COLOR_PAIR(METEOR_COLOR_PAIR));
         for (int i = 0; i < MAX_METEORS; ++i){
             if (meteors[i].active){
                 mvwprintw(game_win, meteors[i].y, meteors[i].x - 1, "*****");  
             }
         }
+        wattroff(game_win, A_DIM | COLOR_PAIR(METEOR_COLOR_PAIR));
 
         mvwprintw(game_win, 1, 2, "Score: %d", score);
 
@@ -151,13 +172,22 @@ int main() {
         usleep(15000);
 
     }
-    mvwprintw(game_win, GAME_HEIGHT / 2, (GAME_WIDTH / 2) - 5, "GAME OVER");
-    mvwprintw(game_win, GAME_HEIGHT / 2 + 1, (GAME_WIDTH / 2) - 8, "Press 'q' to exit");
 
-    wrefresh(game_win);
-    nodelay(game_win, FALSE);
 
-    while(wgetch(game_win) != 'q');
+    if (game_over == 1) {
+        mvwprintw(game_win, GAME_HEIGHT / 2, (GAME_WIDTH / 2) - 5, "GAME OVER");
+        mvwprintw(game_win, GAME_HEIGHT / 2 + 1, (GAME_WIDTH / 2) - 8, "Press 'q' to exit");
+        wrefresh(game_win);
+
+        nodelay(game_win, FALSE); 
+        flushinp();               
+        while(wgetch(game_win) != 'q');
+    }
+
+
+
+
+
     ui_cleanup(game_win);
 
     return 0;

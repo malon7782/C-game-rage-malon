@@ -8,13 +8,13 @@ CFLAGS = -Wall -Ilib
 
 # 链接选项
 # -lncurses: 链接 ncurses 库
-LDFLAGS = -lncurses
+LDFLAGS = -lncurses -lm
 
 # 最终生成的可执行文件名
 EXECUTABLE = game
 
 # 所有的源文件 (.c)
-SOURCES = src/main.c lib/game_logic.c lib/ui.c
+SOURCES = src/main.c lib/game_logic.c lib/ui.c lib/background.c 
 
 # 根据源文件自动生成目标文件 (.o) 的名字
 OBJECTS = $(SOURCES:.c=.o)

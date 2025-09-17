@@ -19,6 +19,8 @@ void ui_init() {
     start_color();
     init_pair(PLAYER_COLOR_PAIR, COLOR_WHITE, COLOR_BLACK); 
     init_pair(TRAIL_COLOR_PAIR, COLOR_WHITE, COLOR_BLACK);
+    init_pair(METEOR_COLOR_PAIR, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(ENEMY_COLOR_PAIR, COLOR_YELLOW, COLOR_BLACK);
 }
 
 void ui_cleanup(WINDOW *win) {

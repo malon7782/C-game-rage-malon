@@ -7,6 +7,10 @@
 #define GAME_WIDTH 20
 #define PLAYER_COLOR_PAIR 1 
 #define TRAIL_COLOR_PAIR 2
+#define ENEMY_COLOR_PAIR 3
+#define METEOR_COLOR_PAIR 4
+
+
 void ui_init();
 
 void ui_cleanup(WINDOW *win);
